@@ -15,14 +15,14 @@ export const declineNoAnswersAfterAnHour = async () => {
 
 	try {
 		const page = await context.newPage();
-		await page.goto(
-			`https://www.facebook.com/groups/${process.env.GROUP_ID}/member-requests?joined_fb_recently=false&membership_questions=not_answered_questions&orderby=chronological&previously_removed_members=false&saved_filter=&suggested=false`
-		);
-
 		let tookAction = false;
+
 		do {
-			if (tookAction) await page.reload();
 			tookAction = false;
+
+			await page.goto(
+				`https://www.facebook.com/groups/${process.env.GROUP_ID}/member-requests?joined_fb_recently=false&membership_questions=not_answered_questions&orderby=chronological&previously_removed_members=false&saved_filter=&suggested=false`
+			);
 
 			// Check if there are any member requests
 			if ((await page.getByText(`We couldn't find any people for this search`).count()) > 0) {
@@ -68,12 +68,18 @@ export const declineNoAnswersAfterAnHour = async () => {
 				}
 
 				console.log('Duration Text: ', duration);
-				const minutes = parseDuration(duration, 'm');
+				let minutes = parseDuration(duration, 'm');
+
+				if (minutes === null) {
+					// Facebook gets fancy. Here's another one we care about:
+					if (duration === 'about an hour ago') {
+						minutes = 60;
+					}
+				}
+
 				console.log('Duration parsed in minutes: ', minutes);
 
 				if (minutes && minutes >= 45) {
-					tookAction = true;
-
 					console.log('Duration is greater than 45 minutes, rejecting with text.');
 					await memberCard.getByRole('button').last().click();
 					await page.getByText('Decline with feedback').click();
@@ -83,9 +89,10 @@ export const declineNoAnswersAfterAnHour = async () => {
 						'Hey there, thanks for your interest in the group. Please answer all questions in the questionnaire and we’ll be happy to review your request to join again.'
 					);
 					await page.getByRole('button', { name: 'Decline' }).click();
+					await page.waitForTimeout(3000);
+					tookAction = true;
+					break;
 				}
-
-				await page.waitForTimeout(5000);
 
 				console.log();
 				console.log('--------------------------------');
