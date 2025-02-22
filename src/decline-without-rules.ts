@@ -54,9 +54,6 @@ export const declineWithoutRules = async (browser: Browser, context: BrowserCont
 			await page.waitForTimeout(3000);
 			tookAction = true;
 			break;
-
-			console.log();
-			console.log('--------------------------------');
 		}
 	} while (tookAction);
 
