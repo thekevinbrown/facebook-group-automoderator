@@ -1,15 +1,8 @@
-import { chromium, Page } from '@playwright/test';
-import { createBrowserContextWithState, saveBrowserState } from '../utils/browser-state';
+import { chromium } from '@playwright/test';
+import { createBrowserContextWithState, saveBrowserState } from './utils/browser-state';
 import parseDuration from 'parse-duration';
 
-interface MemberRequest {
-	name: string;
-	profileUrl: string;
-	requestTime: string;
-	answeredQuestions: boolean;
-}
-
-export const declineNoAnswersAfterAnHour = async () => {
+export const declineNoAnswersAfter45Mins = async () => {
 	const browser = await chromium.launch({ headless: process.env.HEADED !== 'true' });
 	const context = await createBrowserContextWithState(browser);
 

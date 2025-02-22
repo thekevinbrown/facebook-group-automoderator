@@ -1,5 +1,5 @@
 import { chromium } from '@playwright/test';
-import { createBrowserContextWithState, saveBrowserState } from '../utils/browser-state';
+import { createBrowserContextWithState, saveBrowserState } from './utils/browser-state';
 import readline from 'readline';
 
 const waitForEnterKey = () =>

@@ -1,10 +1,10 @@
 import 'dotenv/config';
-import { declineNoAnswersAfterAnHour } from './decline-no-answers-after-an-hour';
+import { declineNoAnswersAfter45Mins } from './decline-no-answers-after-45-mins';
 import { login } from './log-in';
 
 const go = async () => {
 	// await login();
-	await declineNoAnswersAfterAnHour();
+	await declineNoAnswersAfter45Mins();
 };
 
 go();
