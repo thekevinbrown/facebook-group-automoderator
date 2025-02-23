@@ -1,5 +1,7 @@
 import type { Browser, BrowserContext } from 'playwright-core';
 
+const REJECT_TEXT = `Hey there, thanks for your interest in the group. Please accept the group rules and we'll be happy to review your request to join again.`;
+
 export const declineWithoutRules = async (browser: Browser, context: BrowserContext) => {
 	const page = await context.newPage();
 	let tookAction = false;
@@ -47,9 +49,7 @@ export const declineWithoutRules = async (browser: Browser, context: BrowserCont
 			await page.getByText('Decline with feedback').click();
 			await page.getByRole('radio', { name: 'Did not agree to group rules' }).click();
 			await page.getByRole('textbox', { name: 'Write feedback' }).click();
-			await page.keyboard.type(
-				`Hey there, thanks for your interest in the group. Please accept the group rules and we'll be happy to review your request to join again.`
-			);
+			await page.keyboard.type(REJECT_TEXT);
 			await page.getByRole('button', { name: 'Decline' }).click();
 			await page.waitForTimeout(3000);
 			tookAction = true;
