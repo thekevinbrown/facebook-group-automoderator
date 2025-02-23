@@ -53,7 +53,7 @@ export const attach = ({ construct, bucket }: { construct: Construct; bucket: Bu
 
 	// Trigger it every 10 minutes
 	new Rule(construct, 'ModeratorTrigger', {
-		schedule: Schedule.rate(Duration.minutes(10)),
+		schedule: Schedule.rate(Duration.minutes(60)),
 		targets: [new LambdaFunction(moderator)],
 	});
 };
