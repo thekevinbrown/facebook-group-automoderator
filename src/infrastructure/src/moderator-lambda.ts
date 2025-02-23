@@ -16,7 +16,6 @@ export const attach = ({ construct, bucket }: { construct: Construct; bucket: Bu
 		handler: 'index.handler',
 		runtime: Runtime.NODEJS_22_X,
 		timeout: Duration.minutes(15),
-		architecture: Architecture.ARM_64,
 		memorySize: 1024,
 		entry: path.resolve(__dirname, '..', '..', 'lambda.ts'),
 		environment: {
