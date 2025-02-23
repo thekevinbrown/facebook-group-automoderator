@@ -1,7 +1,10 @@
 import type { Browser, BrowserContext } from 'playwright-core';
 import parseDuration from 'parse-duration';
 
-export const declineNoAnswersAfter45Mins = async (browser: Browser, context: BrowserContext) => {
+const MAX_DURATION_IN_MINUTES = 30;
+const REJECT_TEXT = `Hey there, thanks for your interest in the group. Please answer all questions in the questionnaire and we'll be happy to review your request to join again.`;
+
+export const declineNoAnswersAfterDuration = async (browser: Browser, context: BrowserContext) => {
 	const page = await context.newPage();
 	let tookAction = false;
 
@@ -67,21 +70,21 @@ export const declineNoAnswersAfter45Mins = async (browser: Browser, context: Bro
 
 			console.log('Duration parsed in minutes: ', minutes);
 
-			if (minutes && minutes >= 45) {
-				console.log('Duration is greater than 45 minutes, rejecting with text.');
+			if (minutes && minutes >= MAX_DURATION_IN_MINUTES) {
+				console.log(
+					`Duration is greater than ${MAX_DURATION_IN_MINUTES} minutes, rejecting with text.`
+				);
 				await memberCard.getByRole('button').last().click();
 				await page.getByText('Decline with feedback').click();
 				await page.getByRole('radio', { name: 'Issue with answer to questions' }).click();
 				await page.getByRole('textbox', { name: 'Write feedback' }).click();
-				await page.keyboard.type(
-					'Hey there, thanks for your interest in the group. Please answer all questions in the questionnaire and we’ll be happy to review your request to join again.'
-				);
+				await page.keyboard.type(REJECT_TEXT);
 				await page.getByRole('button', { name: 'Decline' }).click();
 				await page.waitForTimeout(3000);
 				tookAction = true;
 				break;
 			} else {
-				console.log('Duration is less than 45 minutes, skipping.');
+				console.log(`Duration is less than ${MAX_DURATION_IN_MINUTES} minutes, skipping.`);
 			}
 
 			console.log();
