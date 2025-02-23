@@ -1,4 +1,4 @@
-import { Browser, BrowserContext } from '@playwright/test';
+import type { Browser, BrowserContext } from 'playwright-core';
 import parseDuration from 'parse-duration';
 
 export const declineNoAnswersAfter45Mins = async (browser: Browser, context: BrowserContext) => {

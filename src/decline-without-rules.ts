@@ -1,4 +1,4 @@
-import { Browser, BrowserContext } from '@playwright/test';
+import type { Browser, BrowserContext } from 'playwright-core';
 
 export const declineWithoutRules = async (browser: Browser, context: BrowserContext) => {
 	const page = await context.newPage();
